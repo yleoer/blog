@@ -1,7 +1,6 @@
 name: Deploy
 
-on:
-  [push]
+on: [push]
 
 jobs:
   build:
@@ -9,9 +8,9 @@ jobs:
     name: A job to deploy blog.
     steps:
     - name: Checkout
-      users: actions/checkout@v1
+      uses: actions/checkout@v1
       with:
-        submodules:true
+        submodules: true
     - name: Cache node modules
       uses: actions/cache@v1
       id: cache
@@ -19,18 +18,16 @@ jobs:
         path: node_modules
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
-          ${{ runner.os}}-node-
-    -name: Install Dependencies
+          ${{ runner.os }}-node-
+    - name: Install Dependencies
       if: steps.cache.outputs.cache-hit != 'true'
-      run: npm install
-    -name: Deploy
+      run: npm ci
+    - name: Deploy
       id: deploy
-      uses: smallback/hexo-action@v1.0.3
+      uses: sma11black/hexo-action@v1.0.3
       with:
         deploy_key: ${{ secrets.DEPLOY_KEY }}
-        user_name: yleoer
-        user_email: yleoer@gmail.com
         commit_msg: ${{ github.event.head_commit.message }}
-    -name: Get the output
+    - name: Get the output
       run: |
         echo "${{ steps.deploy.outputs.notify }}"
