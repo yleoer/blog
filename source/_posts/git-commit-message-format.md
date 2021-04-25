@@ -2,7 +2,7 @@
 title: Git 提交规范
 date: 2021-02-02 10:39:02
 tags: Git
-categories: Git
+categories: 工具
 ---
 
 规范的代码提交有利于快速定位改动，有助于生成清晰的 ChangeLog 。
