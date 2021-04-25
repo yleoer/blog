@@ -267,7 +267,7 @@ func (ms *multiSorter) Less(i, j int) bool {
 	p, q := &ms.changes[i], &ms.changes[j]
 	// 除了最后一个，其他都进行比较
 	var k int
-	for k = 0; k < len(ms.less); k++ {
+	for k = 0; k < len(ms.less)-1; k++ {
 		less := ms.less[k]
 		switch {
 		case less(p, q):
