@@ -392,7 +392,7 @@ post:
 
     # 文章日期，优先根据 front-matter 里 date 字段，其次是 md 文件日期
     date:
-      enable: true
+      enable: false
       # 格式参照 ISO-8601 日期格式化
       # See: http://momentjs.cn/docs/#/parsing/string-format/
       format: "LL a"
