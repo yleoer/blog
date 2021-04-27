@@ -1,8 +1,10 @@
 ---
 title: 程序结构 | Go 语言圣经
-date: 2021-04-27 10:20:11
 tags: Golang
 categories: 编程语言
+abbrlink: d1c3e6d7
+date: 2021-04-27 10:20:00
+hide: true
 ---
 
 《Go 语言圣经》 读书笔记 —— 程序结构

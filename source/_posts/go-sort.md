@@ -1,10 +1,12 @@
 ---
 title: Go 语言中 sort 包的使用
-date: 2021-04-25 10:48:09
-tags: 
-	- Golang
-	- 排序
+tags:
+  - Golang
+  - 排序
 categories: 编程语言
+abbrlink: 9ccd35a7
+date: 2021-04-25 10:48:09
+hide: true
 ---
 
 Go 语言的 sort 包提供了对切片和自定义集合排序的函数。
