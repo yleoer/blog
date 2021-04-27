@@ -67,7 +67,7 @@ C 语言的定义：
 typedef struct {
     ElemType data[MAX_SIZE];  // 用数组存放数据元素，ElemType 为指定的数据类型
     int length;               // 顺序表的当前长度
-} SqList;                     // 顺序表的类型定义
+} SeqList;                    // 顺序表的类型定义
 ```
 
 例如：
@@ -87,10 +87,10 @@ const char false[] = "✘";
 typedef struct {
     int data[MAX_SIZE];
     int length;
-} SqList;
+} SeqList;
 
 // 初始化顺序表 <L>
-void InitList(SqList *L) {
+void InitList(SeqList *L) {
     // 只需要将顺序表初始长度修改为 0 即可
     // 不需要为所有数据元素设置默认值
     L->length = 0;
@@ -98,7 +98,7 @@ void InitList(SqList *L) {
 
 // ListInsert 在顺序表 <L> 的第 <i> 个位置插入指定元素 <e>
 // 如果 i 的范围无效，返回 0；成功插入元素返回 1
-int ListInsert(SqList *L, int i, int e) {
+int ListInsert(SeqList *L, int i, int e) {
     // 判断 i 的范围是否有效
     if (i < 1 || i > L->length + 1) {
         return 0;
@@ -120,7 +120,7 @@ int ListInsert(SqList *L, int i, int e) {
 
 // ListDelete 删除顺序表 <L> 的第 <i> 个元素，并用 <e> 返回删除元素的值
 // 如果 i 的范围无效，返回 0；成功删除指定元素返回 1
-int ListDelete(SqList *L, int i, int *e) {
+int ListDelete(SeqList *L, int i, int *e) {
     // 判断 i 的范围是否有效
     if (i < 1 || i > L->length) {
         return 0;
@@ -138,7 +138,7 @@ int ListDelete(SqList *L, int i, int *e) {
 
 // GetElem 获取顺序表 <L> 中第 <i> 个元素，用 <e> 返回对应元素的值
 // 如果 i 的范围无效，返回 0；成功获取指定元素返回 1
-int GetElem(SqList L, int i, int *e) {
+int GetElem(SeqList L, int i, int *e) {
     // 判断 i 的范围是否有效
     if (i < 1 || i > L.length) {
         return 0;
@@ -150,7 +150,7 @@ int GetElem(SqList L, int i, int *e) {
 
 // LocateElem 在顺序表 <L> 中查找第一个元素值等于 <e> 的元素，并返回其位序
 // 如果找到指定元素返回对应元素的位序，否则返回 0
-int LocateElem(SqList L, int e) {
+int LocateElem(SeqList L, int e) {
     // 遍历整个数组
     for (int i = 0; i < L.length; i++) {
         // 判断当前位置的元素值和指定的元素是否相同
@@ -163,12 +163,12 @@ int LocateElem(SqList L, int e) {
 }
 
 // Length 返回顺序表 <L> 的当前长度
-int Length(SqList L) {
+int Length(SeqList L) {
     return L.length;
 }
 
 // PrintList 按前后顺序打印顺序表 <L> 的所有元素及其下标
-void PrintList(SqList L) {
+void PrintList(SeqList L) {
     printf("Print List: [");
     for (int i = 0; i < L.length - 1; i++) {
         printf("%d, ", L.data[i]);
@@ -177,13 +177,13 @@ void PrintList(SqList L) {
 }
 
 // Empty 判断顺序表 <L> 是否是空表，是则返回 1，否则返回 0
-int Empty(SqList L) {
+int Empty(SeqList L) {
     return L.length == 0;
 }
 
 int main() {
     // 声明顺序表变量
-    SqList sqList;
+    SeqList sqList;
     int e, index, length;
     // 初始化顺序表
     InitList(&sqList);
@@ -308,6 +308,8 @@ int main() {
 
 #### 动态分配
 
+和静态分配的区别在于当顺序表已满的时候再插入元素，静态分配返回错误，而动态分配重新分配数组，插入元素。
+
 C 语言的定义：
 
 ```c
@@ -323,33 +325,62 @@ typedef struct {
 例如：
 
 ```c
-#include <stdlib.h> // malloc 和 free 函数所需要的头文件
+#include <stdio.h>
+#include <stdlib.h>
 
-#define INIT_MAX 10
+// INIT_SIZE 顺序表最大容量
+#define INIT_SIZE 10
 
+// SqList 定义顺序表结构
 typedef struct {
     int *data;
     int maxSize;
     int length;
 } SeqList;
 
-// InitList 初始化一个顺序表
+// 初始化顺序表 <L>
 void InitList(SeqList *L) {
     // 使用 malloc 函数申请一片连续的存储空间
-    L->data = (int *) malloc(INIT_MAX * sizeof(int));
+    L->data = (int *) malloc(INIT_SIZE * sizeof(int));
+    L->maxSize = INIT_SIZE;
     L->length = 0;
-    L->maxSize = INIT_MAX;
 }
 
-// IncreaseSize 增加动态数组的长度
+// IncreaseSize 将顺序表 <L> 的长度增加 <len>
 void IncreaseSize(SeqList *L, int len) {
     int *p = L->data;
-    L->maxSize += len; // 顺序表最大长度增加 len
+    // 顺序表最大长度增加 len
+    L->maxSize += len;
     L->data = (int *) malloc(L->maxSize * sizeof(int));
+    // 将数据赋值到新区域
     for (int i = 0; i < L->length; i++) {
-        L->data[i] = p[i]; // 将数据赋值到新区域
+        L->data[i] = p[i];
     }
-    free(p); // 释放原来的内存空间
+    // 释放原来的内存空间
+    free(p);
+}
+
+// ListInsert 在顺序表 <L> 的第 <i> 个位置插入指定元素 <e>
+// 如果 i 的范围无效，返回 0；成功插入元素返回 1
+// 如果顺序表已满，则扩充数组空间
+int ListInsert(SeqList *L, int i, int e) {
+    // 判断 i 的范围是否有效
+    if (i < 1 || i > L->length + 1) {
+        return 0;
+    }
+    // 判断当前存储空间是否已满，已满则扩充空间
+    if (L->length >= L->maxSize) {
+        IncreaseSize(L, INIT_SIZE);
+    }
+    // 将第 i 个位置后的元素及顺序后移
+    for (int j = L->length; j >= i; j--) {
+        L->data[j] = L->data[j - 1];
+    }
+    // 在位序 i 处添加指定元素
+    L->data[i - 1] = e;
+    // 顺序表的当前长度加 1
+    L->length++;
+    return 1;
 }
 ```
 
@@ -359,7 +390,5 @@ void IncreaseSize(SeqList *L, int len) {
 2. 存储密度高。每个节点只存储数据元素。
 3. 扩展容量不方便。即便采用动态分配的方式实现，拓展长度的时间复杂度也比较高。
 4. 插入、删除操作不方便，需要移动大量元素。
-
-未完待续 ...
 
 [^1]: [数据结构-王道考研](https://www.bilibili.com/video/BV1b7411N798)
