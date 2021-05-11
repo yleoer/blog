@@ -1,5 +1,4 @@
-# deploy.yml
-name: deploy blog to aliyun
+name: deploy blog to cloud
 on:
   push:
     branches:
@@ -7,27 +6,32 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       # 切换分支
-      - name: Checkout
+      - name: checkout main
         uses: actions/checkout@master
+
       # 下载 git submodule
       - uses: srt32/git-actions@v0.0.3
         with:
           args: git submodule update --init --recursive
-      # 使用 node:10
+
+      # 安装 node:10
       - name: use Node.js 10
         uses: actions/setup-node@v1
         with:
           node-version: 10
-      # npm install
+
+      # 安装 hexo
       - name: npm install
         run: |
           npm install -g hexo-cli
           npm install
         env:
           CI: true
-      # build
+
+      # 生成静态文件
       - name: hexo build
         run: |
           hexo clean
@@ -35,9 +39,9 @@ jobs:
         env:
           CI: true
 
-      # Deploy
+      # 部署
       - name: Deploy
-        uses: easingthemes/ssh-deploy@v2.0.7
+        uses: easingthemes/ssh-deploy@v2
         env:
           SSH_PRIVATE_KEY: ${{ secrets.ACCESS_TOKEN }}
           ARGS: "-avz --delete"
